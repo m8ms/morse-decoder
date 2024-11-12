@@ -5,9 +5,53 @@
   <title>Hello, world!</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="" />
-  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="style.css" />
+  <script>
+
+    const morseToChar = {
+      '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F', '--.': 'G',
+      '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N',
+      '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T', '..-': 'U',
+      '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y', '--..': 'Z'
+    };
+    function decodeRecursively(remainingCode, currentString, results) {
+      if (remainingCode.length === 0) {
+        results.push(currentString);
+        return;
+      }
+
+      for (let key of Object.keys(morseToChar)) {
+        if (remainingCode.startsWith(key)) {
+          decodeRecursively(remainingCode.replace(key, ''), currentString + morseToChar[key], results);
+        }
+      }
+    }
+    function decode(){
+      const results = [];
+      decodeRecursively(document.getElementById("input").value, '', results);
+      results.forEach((result, index) => {
+        results[index] = result.slice(0, 1) + result.slice(1).toLowerCase();
+      })
+      document.getElementById("result").innerHTML = 'Total: ' + results.length + ' results' + "<br/>" +  results.join(', ');
+    }
+
+  </script>
 </head>
 <body>
-  <h1>Hello, world!</h1>
+<h2>Decode morse</h2>
+<input id="input"/>
+<div><button onClick="decode()">decode</button></div>
+<h4>Results:</h4>
+<div id="result">...</div>
+<hr/>
+<h4>Dictionary used:</h4>
+<div id="dictionary" style="display: grid; grid-gap: 3px; grid-template-columns: 20px 50px 20px 50px 20px 50px 20px 50px;">
+</div>
+<script>
+  let i = 0;
+  for(let key of Object.keys(morseToChar)){
+    document.getElementById("dictionary").innerHTML += `<div>${morseToChar[key]}:</div><div>"${key}"</div>`;
+  }
+</script>
 </body>
 </html>
